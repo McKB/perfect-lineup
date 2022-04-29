@@ -1,19 +1,48 @@
 const validateLineup = (lineup) => {
-  let currentTest
+  let totalSalary = lineup.reduce((salary, player) => salary += player.salary, 0)
 
-  currentTest = lineup.reduce((salary, player) => salary += player.salary, 0)
-  if (currentTest > 45000) {
+  if (totalSalary > 45000) {
     return false
   }
 
-  // need to go through and sort or filter or reduce by team to determine number of teams represented
-  //    (map all team numbers to an array of JUST NUMBERS then see if more than 2 are equal?)
-  // need to determine if more than 3 games are represented
-  //    (same as teams, but for game numbers)
+  let maxTeams = 2
+  let teamsArray = lineup.map(player => player.teamId).sort((a, b) => a - b)
+  let hasEnoughTeams = checkNums(teamsArray, maxTeams)
+
+  if (!hasEnoughTeams) {
+    return false
+  }
+
+  let maxGames = 3
+  let gamesArray = lineup.map(player => player.gameId).sort((a, b) => a - b)
+  let hasEnoughGames = checkNums(gamesArray, maxGames)
+
+  if (!hasEnoughGames) {
+    return false
+  }
+
   // need 3 OF players exactly, and one for each position exactly. 
   //    (find? or some? for the single values. filter out OF players and get length of that new array, check === 3. 
 
   // returns true if all conditions are met
+  return true
+}
+
+const checkNums = (numsArray, maxNum) => {
+  let count = 1
+
+  for (let i = 1; i < numsArray.length; i++) {
+    let num = numsArray[i]
+    let previousNum = numsArray[i - 1]
+
+    if (num === previousNum) {
+      count++
+    }
+    if (count > maxNum) {
+      return false
+    }
+  }
+
   return true
 }
 
