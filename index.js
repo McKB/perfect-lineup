@@ -21,12 +21,26 @@ const validateLineup = (lineup) => {
     return false
   }
 
-  // need 3 OF players exactly, and one for each position exactly. 
-  //    (find? or some? for the single values. filter out OF players and get length of that new array, check === 3. 
+  let reqOF = 3
+  let outfieldArray = lineup.filter(player => player.position === 'OF')
 
-  // returns true if all conditions are met
+  if (outfieldArray.length !== reqOF) {
+    return false
+  }
+
+  let expectedPositions = ['1B', '2B', '3B', 'P', 'C', 'SS', 'OF']
+  let actualPositions = lineup.map(player => player.position)
+  let posDiff = expectedPositions.filter(pos => !actualPositions.includes(pos))
+  let hasAllPositions = checkPositions(posDiff, lineup)
+
+  if (!hasAllPositions) {
+    return false
+  }
+
   return true
 }
+
+const checkPositions = (posDiff, lineup) => posDiff.length === 0 && lineup.length === 9
 
 const checkNums = (numsArray, maxNum) => {
   let count = 1
